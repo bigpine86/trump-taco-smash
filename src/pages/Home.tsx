@@ -1,5 +1,5 @@
-import TapCounter from '@/components/TapCounter'
+import TrumpTacoCounter from '@/components/TrumpTacoCounter'
 
 export default function Home() {
-  return <TapCounter />
+  return <TrumpTacoCounter />
 }

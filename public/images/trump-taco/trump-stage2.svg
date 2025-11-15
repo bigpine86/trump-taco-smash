@@ -1,0 +1,26 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Trump head stage 2 - Starting to transform -->
+  <ellipse cx="100" cy="100" rx="75" ry="70" fill="#FDB863" stroke="#000" stroke-width="2"/>
+  
+  <!-- Hair - starting to look like feathers -->
+  <path d="M 35 75 Q 50 35, 80 55 Q 100 25, 120 55 Q 150 35, 165 75" fill="#FFD700" stroke="#FFA500" stroke-width="1"/>
+  <circle cx="45" cy="50" r="3" fill="#8B4513"/>
+  <circle cx="100" cy="35" r="3" fill="#8B4513"/>
+  <circle cx="155" cy="50" r="3" fill="#8B4513"/>
+  
+  <!-- Eyes - starting to get chicken-like -->
+  <ellipse cx="75" cy="85" rx="10" ry="8" fill="#fff" stroke="#000" stroke-width="1"/>
+  <ellipse cx="125" cy="85" rx="10" ry="8" fill="#fff" stroke="#000" stroke-width="1"/>
+  <circle cx="75" cy="85" r="5" fill="#000"/>
+  <circle cx="125" cy="85" r="5" fill="#000"/>
+  
+  <!-- Beak starting to form -->
+  <path d="M 100 95 L 90 105 L 100 110 L 110 105 Z" fill="#FF8C00" stroke="#000" stroke-width="1"/>
+  
+  <!-- Mouth/beak area -->
+  <ellipse cx="100" cy="125" rx="20" ry="12" fill="#8B4513" stroke="#000" stroke-width="2"/>
+  <text x="100" y="129" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">TACO</text>
+  
+  <!-- Starting to shrink -->
+  <ellipse cx="100" cy="160" rx="15" ry="8" fill="#FDB863" stroke="#000" stroke-width="1"/>
+</svg>

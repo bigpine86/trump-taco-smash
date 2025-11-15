@@ -1,0 +1,30 @@
+<svg width="150" height="140" viewBox="0 0 150 140" xmlns="http://www.w3.org/2000/svg">
+  <!-- Chicken stage 5 - Fully transformed -->
+  <ellipse cx="75" cy="70" rx="25" ry="20" fill="#F5DEB3" stroke="#000" stroke-width="2"/>
+  
+  <!-- Full chicken feathers -->
+  <path d="M 50 45 Q 60 25, 75 35 Q 90 25, 100 45" fill="#FFD700" stroke="#FFA500" stroke-width="1"/>
+  <circle cx="55" cy="40" r="6" fill="#8B4513"/>
+  <circle cx="75" cy="30" r="6" fill="#8B4513"/>
+  <circle cx="95" cy="40" r="6" fill="#8B4513"/>
+  
+  <!-- Chicken comb -->
+  <path d="M 65 35 Q 70 25, 75 30 Q 80 25, 85 35" fill="#DC143C" stroke="#000" stroke-width="1"/>
+  
+  <!-- Chicken eyes -->
+  <circle cx="68" cy="60" r="4" fill="#fff" stroke="#000" stroke-width="1"/>
+  <circle cx="82" cy="60" r="4" fill="#fff" stroke="#000" stroke-width="1"/>
+  <circle cx="68" cy="60" r="2" fill="#000"/>
+  <circle cx="82" cy="60" r="2" fill="#000"/>
+  
+  <!-- Small beak -->
+  <path d="M 75 65 L 68 68 L 75 71 L 82 68 Z" fill="#FF8C00" stroke="#000" stroke-width="1"/>
+  
+  <!-- Small wattles -->
+  <circle cx="70" cy="75" r="3" fill="#DC143C" stroke="#000" stroke-width="1"/>
+  <circle cx="80" cy="75" r="3" fill="#DC143C" stroke="#000" stroke-width="1"/>
+  
+  <!-- Tiny taco -->
+  <rect x="70" y="68" width="10" height="4" rx="2" fill="#8B4513" stroke="#000" stroke-width="1"/>
+  <text x="75" y="71" text-anchor="middle" font-size="4" fill="#fff" font-weight="bold">T</text>
+</svg>

@@ -1,0 +1,27 @@
+<svg width="200" height="180" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+  <!-- Chicken head stage 3 - Half transformed -->
+  <ellipse cx="100" cy="90" rx="45" ry="40" fill="#F5DEB3" stroke="#000" stroke-width="2"/>
+  
+  <!-- Feathers -->
+  <path d="M 60 65 Q 70 45, 85 55 Q 100 35, 115 55 Q 130 45, 140 65" fill="#FFD700" stroke="#FFA500" stroke-width="1"/>
+  <circle cx="65" cy="50" r="4" fill="#8B4513"/>
+  <circle cx="100" cy="40" r="4" fill="#8B4513"/>
+  <circle cx="135" cy="50" r="4" fill="#8B4513"/>
+  
+  <!-- Chicken eyes -->
+  <ellipse cx="85" cy="80" rx="8" ry="6" fill="#fff" stroke="#000" stroke-width="1"/>
+  <ellipse cx="115" cy="80" rx="8" ry="6" fill="#fff" stroke="#000" stroke-width="1"/>
+  <circle cx="85" cy="80" r="4" fill="#000"/>
+  <circle cx="115" cy="80" r="4" fill="#000"/>
+  
+  <!-- Beak -->
+  <path d="M 100 85 L 88 92 L 100 98 L 112 92 Z" fill="#FF8C00" stroke="#000" stroke-width="1"/>
+  
+  <!-- Wattles starting to show -->
+  <ellipse cx="95" cy="105" rx="8" ry="6" fill="#DC143C" stroke="#000" stroke-width="1"/>
+  <ellipse cx="105" cy="105" rx="8" ry="6" fill="#DC143C" stroke="#000" stroke-width="1"/>
+  
+  <!-- Taco in beak -->
+  <rect x="85" y="95" width="30" height="8" rx="4" fill="#8B4513" stroke="#000" stroke-width="1"/>
+  <text x="100" y="100" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">TACO</text>
+</svg>
