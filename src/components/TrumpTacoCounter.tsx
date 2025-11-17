@@ -139,27 +139,15 @@ const TapCounter: React.FC = () => {
       {/* Hammer effect */}
       {hammerVisible && (
         <div 
-          className="fixed pointer-events-none z-50 transform -translate-x-1/2 -translate-y-1/2"
+          className="fixed pointer-events-none z-50 transform -translate-x-1/2 -translate-y-1/2 animate-bounce"
           style={{
             left: hammerPosition.x,
-            top: hammerPosition.y,
-            animation: 'hammer-hit 0.2s ease-out'
+            top: hammerPosition.y
           }}
         >
-          <img src="/images/trump-taco/hammer.svg" alt="Hammer" className="w-16 h-16" />
+          <img src="/images/trump-taco/hammer.svg" alt="Hammer" className="w-16 h-16 transform rotate-12 scale-125" />
         </div>
       )}
-
-      <style jsx>{`
-        @keyframes hammer-hit {
-          0% { transform: translate(-50%, -50%) scale(1.5) rotate(-20deg); }
-          100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-        }
-        @keyframes trump-shrink {
-          0% { transform: scale(1); }
-          100% { transform: scale(0.6); }
-        }
-      `}</style>
 
       {/* Header */}
       <div className="text-center mb-8 z-10">
@@ -175,12 +163,11 @@ const TapCounter: React.FC = () => {
 
       {/* Trump Transformation Area */}
       <div 
-        className="relative mb-8 cursor-pointer select-none"
+        className={`relative mb-8 cursor-pointer select-none transition-all duration-300 ${
+          trumpStage === 4 ? 'scale-75' : 'scale-100'
+        }`}
         onClick={handleTap}
         onTouchStart={handleTap}
-        style={{
-          animation: trumpStage === 4 ? 'trump-shrink 0.5s ease-out forwards' : 'none'
-        }}
       >
         <img 
           src={TRUMP_STAGES[trumpStage]} 
@@ -234,7 +221,7 @@ const TapCounter: React.FC = () => {
 
       {/* Ads */}
       <div className="w-full max-w-md mb-8">
-        <AdSenseTest />
+        <AdSenseTest slot="test-ad" />
       </div>
 
       {/* Leaderboard */}

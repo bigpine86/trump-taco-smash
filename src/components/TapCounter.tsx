@@ -1,31 +1,35 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useCounterStore } from '../store/counterStore'
-import { playRandomTapSound } from '../utils/sound'
+import { playTrumpHitSound } from '../utils/trumpHitSound'
 import { api, RealtimeClient, Stats } from '../utils/api'
 import Leaderboard from './Leaderboard'
 import RotatingNumber from './RotatingNumber'
 import AdSense from './AdSense'
 import AdSenseTest from './AdSenseTest'
 
-const PENGUIN_IMAGES = [
-  'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20penguin%20character%20with%20big%20eyes%20and%20round%20body%2C%20kawaii%20style%2C%20white%20and%20black%20colors%2C%20happy%20expression%2C%20simple%20design%2C%20cartoon%20style&image_size=square',
-  'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20penguin%20character%20with%20blinking%20eyes%20and%20round%20body%2C%20kawaii%20style%2C%20white%20and%20black%20colors%2C%20surprised%20expression%2C%20simple%20design%2C%20cartoon%20style&image_size=square'
-]
+// Trump real images - keep original Popcat design
+const TRUMP_IMAGES = {
+  normal: '/images/trump-real/trump-normal.png',
+  punched1: '/images/trump-real/trump-punched1.png',
+  punched2: '/images/trump-real/trump-punched2.png'
+}
 
 const TapCounter: React.FC = () => {
   const { 
     count, 
     country, 
     isAnimating, 
-    currentImageIndex, 
     isMacroDetected,
     increment, 
-    setImageIndex,
     setCountry
   } = useCounterStore()
 
-  const [particles, setParticles] = useState<Array<{id: number, x: number, y: number}>>([])
   const [globalStats, setGlobalStats] = useState<Stats>({ totalTaps: 0, activeUsers: 0, countries: {} })
+  const [currentTrumpImage, setCurrentTrumpImage] = useState(TRUMP_IMAGES.normal)
+  const [consecutiveTaps, setConsecutiveTaps] = useState(0)
+  const [isPunched, setIsPunched] = useState(false)
+  const [lastTapTime, setLastTapTime] = useState(0)
+  const [isMouseDown, setIsMouseDown] = useState(false)
 
   // Initialize real-time connection and fetch initial stats
   useEffect(() => {
@@ -59,11 +63,11 @@ const TapCounter: React.FC = () => {
     }))
   }, [country])
 
-  // Handle tap/click with sound and animation
+  // Handle tap/click with Trump hit effect
   const handleTap = useCallback((event: React.MouseEvent | React.TouchEvent) => {
     if (isMacroDetected) return
 
-    // Get position for particle effect
+    // Get position for future effects (currently unused)
     let clientX: number, clientY: number
     if ('touches' in event) {
       clientX = event.touches[0].clientX
@@ -73,8 +77,38 @@ const TapCounter: React.FC = () => {
       clientY = event.clientY
     }
 
-    // Play sound
-    playRandomTapSound()
+    // Mobile vibration feedback
+    if ('vibrate' in navigator) {
+      navigator.vibrate(50) // 50ms 진동
+    }
+
+    // Check if taps are consecutive (within 0.5 seconds)
+    const currentTime = Date.now()
+    const timeSinceLastTap = currentTime - lastTapTime
+    
+    // Reset consecutive taps if too much time passed (0.5초)
+    if (timeSinceLastTap > 500) {
+      setConsecutiveTaps(1)
+    } else {
+      setConsecutiveTaps(prev => prev + 1)
+    }
+    setLastTapTime(currentTime)
+
+    // Determine which punched image to show based on click frequency
+    let punchedImage = TRUMP_IMAGES.punched1
+    const currentConsecutive = timeSinceLastTap > 500 ? 1 : consecutiveTaps + 1
+    
+    // Alternate between punched1 and punched2 based on click patterns
+    if (currentConsecutive > 8 && currentConsecutive % 2 === 0) {
+      punchedImage = TRUMP_IMAGES.punched2
+    }
+
+    // Show punched image immediately
+    setCurrentTrumpImage(punchedImage)
+    setIsPunched(true)
+
+    // Play Trump hit sound
+    playTrumpHitSound()
 
     // Optimistic update for immediate feedback
     optimisticUpdate()
@@ -83,25 +117,35 @@ const TapCounter: React.FC = () => {
     increment()
     api.recordTap().catch(console.error)
 
-    // Add particle effect
-    const newParticle = {
-      id: Date.now(),
-      x: clientX,
-      y: clientY
-    }
-    setParticles(prev => [...prev, newParticle])
-
-    // Remove particle after animation
+    // Return to normal image after delay (200ms)
     setTimeout(() => {
-      setParticles(prev => prev.filter(p => p.id !== newParticle.id))
-    }, 1000)
+      // 마우스를 누르고 있지 않을 때만 원래 이미지로 돌아가기
+      if (!isMouseDown) {
+        setCurrentTrumpImage(TRUMP_IMAGES.normal)
+        setIsPunched(false)
+      }
+    }, 200)
+  }, [consecutiveTaps, increment, isMacroDetected, optimisticUpdate, lastTapTime, isMouseDown])
 
-    // Change image randomly every 50-200 taps
-    if (count > 0 && count % (Math.floor(Math.random() * 150) + 50) === 0) {
-      const newIndex = Math.floor(Math.random() * PENGUIN_IMAGES.length)
-      setImageIndex(newIndex)
-    }
-  }, [count, increment, setImageIndex, isMacroDetected])
+  // Handle mouse down - keep punched image while holding
+  const handleMouseDown = useCallback((event: React.MouseEvent) => {
+    setIsMouseDown(true)
+    handleTap(event)
+  }, [handleTap])
+
+  // Handle mouse up - return to normal image
+  const handleMouseUp = useCallback(() => {
+    setIsMouseDown(false)
+    setCurrentTrumpImage(TRUMP_IMAGES.normal)
+    setIsPunched(false)
+  }, [])
+
+  // Handle mouse leave - return to normal image
+  const handleMouseLeave = useCallback(() => {
+    setIsMouseDown(false)
+    setCurrentTrumpImage(TRUMP_IMAGES.normal)
+    setIsPunched(false)
+  }, [])
 
   // Prevent default touch behavior for better mobile experience
   const handleTouchStart = useCallback((event: React.TouchEvent) => {
@@ -114,29 +158,39 @@ const TapCounter: React.FC = () => {
   const AdComponent = isDevelopment ? AdSenseTest : AdSense
 
   return (
-    <div className="min-h-screen bg-blue-100 flex flex-col items-center justify-center p-4 select-none overflow-hidden">
-      {/* Counter Display */}
-      <div className="text-center mb-8 z-10">
-        <div className="text-8xl font-black text-gray-800 mb-2">
+    <div className="min-h-screen bg-blue-100 flex flex-col items-center justify-center p-4 select-none overflow-hidden relative">
+
+      {/* Counter Display - Positioned at top like Popcat */}
+      <div className="text-center mb-4 z-20 absolute top-8">
+        <div className="text-8xl font-black text-gray-800">
           <RotatingNumber value={count} />
         </div>
       </div>
 
-      {/* Penguin Character */}
-      <div className="relative mb-8 z-10">
+      {/* Trump Character - Full screen immersive like Popcat */}
+      <div className="relative z-10 flex-1 flex items-center justify-center">
         <div
-          className={`relative cursor-pointer transition-transform duration-150 ${
+          className={`relative transition-transform duration-150 ${
             isAnimating ? 'scale-105' : 'scale-100'
           } ${isMacroDetected ? 'opacity-50 cursor-not-allowed' : ''}`}
           onClick={handleTap}
           onTouchStart={handleTouchStart}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
         >
           <img
-            src={PENGUIN_IMAGES[currentImageIndex]}
-            alt="Cute Penguin"
-            className="w-80 h-80 object-contain drop-shadow-lg"
+            src={currentTrumpImage}
+            alt={isPunched ? "Trump punched" : "Trump normal"}
+            className="w-screen h-screen object-contain max-w-none max-h-none"
             draggable={false}
+            style={{ maxWidth: '100vw', maxHeight: '80vh' }}
           />
+          
+          {/* Hit effect overlay when punched */}
+          {isPunched && (
+            <div className="absolute inset-0 bg-red-500 opacity-20 rounded-full animate-ping" />
+          )}
           
           {/* Simple tap animation */}
           {isAnimating && (
@@ -152,30 +206,15 @@ const TapCounter: React.FC = () => {
         )}
       </div>
 
-      {/* Leaderboard */}
-      <Leaderboard globalStats={globalStats} userCountry={country} />
-
-      {/* Bottom Ad - Only at bottom like Popcat */}
-      <div className="w-full max-w-4xl mx-auto mt-8">
-        <AdComponent slot="0987654321" className="w-full h-32" />
+      {/* Leaderboard - Positioned at bottom like Popcat */}
+      <div className="z-20 absolute bottom-32 w-full max-w-4xl mx-auto">
+        <Leaderboard globalStats={globalStats} userCountry={country} />
       </div>
 
-      {/* Particle Effects */}
-      {particles.map(particle => (
-        <div
-          key={particle.id}
-          className="fixed pointer-events-none z-50"
-          style={{
-            left: particle.x,
-            top: particle.y,
-            transform: 'translate(-50%, -50%)'
-          }}
-        >
-          <div className="text-xl animate-ping">
-            ❄️
-          </div>
-        </div>
-      ))}
+      {/* Bottom Ad - Moved to very bottom */}
+      <div className="w-full max-w-4xl mx-auto absolute bottom-0">
+        <AdComponent slot="0987654321" className="w-full h-32" />
+      </div>
     </div>
   )
 }
